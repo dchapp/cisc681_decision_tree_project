@@ -27,7 +27,12 @@ of Delaware - Newark, DE 19716 \\ Email: \{dchapp\}, \{mwyatt\}@udel.edu}}
 
 \section{Introduction}
 Decision trees classifiers are a supervised machine learning technique that can achieve high accuracy, even when learning boundaries between classes that have complex geometry. 
-In addition to high accuracy, decision trees can also provide fast query times, provided that the tree is sufficiently balanced. 
+In addition to high accuracy, decision trees can also provide fast--i.e., $O(\text{log}(n))$ query times, provided that the tree is sufficiently balanced. 
+In this work we implement the ID3 algorithm for inducing decision trees from training data, using information gain of data features as our splitting heuristic. 
+We test our implementation for correctness against two datasets from the UCI machine learning repository: the Auto-MPG dataset and the Wisconsin Breast Cancer dataset.
+Constructing the decision tree classifiers for both of these datasets required not only correct implementation of the base algorithm, but also implementation of techniques for discretizing or ``binning" continuous-valued features.
+In addition to correctness, we provide a comparative study of performance. 
+We implement the decision tree classifier in two ways and compare those implementations gainst each other, and against the reference implementation in scikit-learn. 
 
 \section{Implementation}
 We implemented a system in Python to ingest data in \texttt{.csv} form and construct a decision tree from that data using the ID3 algorithm.
@@ -43,7 +48,8 @@ Below, we provide pseudocode that explicitly describes the ID3 algorithm for bui
 
 \subsection{Design and Use}
 
-\section{Results I: Car MPG Data}
+\section{Results I: Auto-MPG Data}
+The Auto-MPG dataset consists of 42 
 
 \subsection{Discretization of Continuous Values}
 
