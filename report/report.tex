@@ -1,0 +1,71 @@
+\documentclass[12pt, conference, compsocconf]{IEEEtran}
+
+\usepackage{amsmath, amsfonts}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{tikz}
+\usepackage{color, soul}
+
+%%% Package and definitions for displaying pseudocode
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+%\newcommand*\Let[2]{\State #1 $\gets$ #2}
+%\algrenewcommand\alglinenumber[1]{
+%    {\sf\footnotesize\addfontfeatures{Colour=888888,Numbers=Monospaced}#1}}
+%\algrenewcommand\algorithmicrequire{\textbf{Precondition:}}
+%\algrenewcommand\algorithmicensure{\textbf{Postcondition:}}
+
+
+\begin{document}
+\title{CISC-481/681 Project 3: Decision Trees}
+
+\author{\IEEEauthorblockN{Dylan Chapp, Michael Wyatt}
+\IEEEauthorblockA{Department of Computer and Information Sciences \\ University
+of Delaware - Newark, DE 19716 \\ Email: \{dchapp\}, \{mwyatt\}@udel.edu}}
+
+\maketitle
+
+\section{Introduction}
+Decision trees classifiers are a supervised machine learning technique that can achieve high accuracy, even when learning boundaries between classes that have complex geometry. 
+In addition to high accuracy, decision trees can also provide fast query times, provided that the tree is sufficiently balanced. 
+
+\section{Implementation}
+We implemented a system in Python to ingest data in \texttt{.csv} form and construct a decision tree from that data using the ID3 algorithm.
+Additionally, modules for discretization of non-categorical features, pruning, k-fold cross validation, and visualization of the decision tree were implemented.
+Though we always use the ID3 algorithm, we experimented with two distinct ways of representing the decision tree--in one case an object-oriented approach with explicit node objects, and in the other as a set of nested dictionaries--in order to compare their relative performance.  
+
+\subsection{The ID3 Algorithm}
+The goal of the ID3 algorithm is to construct a decision tree classifier. 
+To that end, the algorithm considers subsets of the training data--initially the entire set--and selects a feature on which to partition the subset. 
+Selection of a feature is equivalent to creation of a node in the tree with descendent edges for each value the feature can assume.
+The algorithm then recurses on each branch; considering the subset of the training data that matches the value on the branch and excluding the previous feature from consideration.
+Below, we provide pseudocode that explicitly describes the ID3 algorithm for building a decision tree:
+
+\subsection{Design and Use}
+
+\section{Results I: Car MPG Data}
+
+\subsection{Discretization of Continuous Values}
+
+\subsection{Accuracy Evaluation}
+
+\section{Results II: Wisconsin Breast Cancer Data}
+
+\subsection{Accuracy Evaluation}
+
+\subsection{Effect of Pruning}
+
+\section{Extensions}
+
+\subsection{Performance Comparison}
+
+\subsection{K-fold Cross Validation}
+
+\subsection{Comparison with scikit-learn}
+
+\section{Conclusions}
+
+%\bibliographystyle{IEEEtran}
+%\bibliography{bibliography}
+
+\end{document}
