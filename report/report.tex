@@ -46,6 +46,29 @@ Selection of a feature is equivalent to creation of a node in the tree with desc
 The algorithm then recurses on each branch; considering the subset of the training data that matches the value on the branch and excluding the previous feature from consideration.
 Below, we provide pseudocode that explicitly describes the ID3 algorithm for building a decision tree:
 
+\begin{algorithm}
+    \caption{ID3}
+    \label{alg-id3}
+    \begin{algorithmic}[1]
+        \Function{ID3}{training\_data}
+            \If{all training data has same class}
+                \State return a leaf node labeled with that class
+            \ElsIf{there are no remaining features}
+                \State return a leaf node labeled with the majority class
+            \Else
+                \State Determine the feature $f$ with maximum information gain
+                \State Generate a node labeled with that feature
+                \State Add an outgoing branch from that node for each value that feature can take
+                \For{each branch}
+                    \State Select subset of training data matching feature value of branch
+                    \State Remove $f$ from features under consideration
+                    \State Recurse on that subset   
+                \EndFor
+            \EndIf
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
 \subsection{Design and Use}
 
 \section{Results I: Auto-MPG Data}
