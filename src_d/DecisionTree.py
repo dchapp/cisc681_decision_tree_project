@@ -7,15 +7,16 @@ class DecisionTree(object):
         self.training_data = training_data
         self.features      = features
         self.classes       = classes
-        self.children      = []
+        self.children      = {}
         self.splitting_feature = None
+        self.klass         = None
         #self.nodes         = [DecisionTreeNode(range(len(training_data)), None, i)]
     
     
     def build_tree_id3(self):
         for f in self.features:
             possible_values = self.get_possible_values(f)
-            if len(possible_values) > 4:
+            if len(possible_values) > 10:
                 self.bin_values_median(f)
         self.build_tree_id3_helper()
 
@@ -24,17 +25,20 @@ class DecisionTree(object):
     """
     def build_tree_id3_helper(self):
         class_counts = self.get_class_counts(self.training_data)
+        #print "Class counts:"
+        #print class_counts
+
         majority_class = max(class_counts.iteritems(), key=operator.itemgetter(1))[0]
 
-        print "DEBUG"
-        print self.features
+        #print "DEBUG"
+        #print self.features
 
         ### Case 1: All instances in subset have same class
         if class_counts[majority_class] == len(self.training_data):
-            self.children.append(majority_class)
+            self.klass = majority_class
         ### Case 2: No features left to test
         elif len(self.features) == 0:
-            self.children.append(majority_class)
+            self.klass = majority_class
         ### Case 3: Otherwise 
         else:
             ### Get feature that maximizes information gain
@@ -42,21 +46,33 @@ class DecisionTree(object):
             for f in self.features:
                 gains[f] = self.information_gain(f)
             max_gain_feature = max(gains.iteritems(), key=operator.itemgetter(1))[0]
+
+            #print "Max gain feature is: " + str(max_gain_feature)
+            
+            ### Assign that feature to the current node in the DT
+            self.splitting_feature = max_gain_feature
+
             ### Make a child for each value the feature can take
             values = self.get_possible_values(max_gain_feature)
             for v in values:
                 ### Get subset of training data for which this feature has value v
                 subset = self.get_fixed_value_subset(max_gain_feature, v)
+                
+                #print "Subset for: " + str(max_gain_feature) + " = " + str(v)
+                #print subset
+                #print "\n"
+
                 ### Exclude feature from future consideration
                 new_features = list(self.features)
                 new_features.remove(max_gain_feature)
 
-                print "DEBUG"
-                print new_features
+                #print "DEBUG"
+                #print new_features
 
                 dt = DecisionTree(subset, new_features, self.classes)
-                dt.build_tree_id3_helper()
-                self.children.append(dt)
+                #dt.build_tree_id3_helper()
+                self.children[v] = dt
+                self.children[v].build_tree_id3_helper()
 
 
     """
@@ -65,11 +81,18 @@ class DecisionTree(object):
     def classify(self, test_instance):
         ### Descend to a leaf
         dt = self
-        while type(dt.children.values()[0]) != str:
-            splitting_value = test_instance[self.splitting_feature]
+        print dt.children
+        #while type(dt.children.values()[0]) != str:
+        while not dt.klass:
+            splitting_value = test_instance[dt.splitting_feature]
+            #print self.splitting_feature
+            #print splitting_value
             dt = dt.children[splitting_value]
+            #print dt.children
+            #exit()
         ### Return class at leaf
-        return dt.children[test_instance[dt.splitting_feature]]
+        #return dt.children[test_instance[dt.splitting_feature]]
+        return dt.klass
 
 
     """
