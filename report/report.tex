@@ -72,17 +72,34 @@ Below, we provide pseudocode that explicitly describes the ID3 algorithm for bui
 \subsection{Design and Use}
 
 \section{Results I: Auto-MPG Data}
-The Auto-MPG dataset consists of 42 
+The Auto-MPG dataset consists of 42 training instances, each of which has seven features: mpg, cylinders, displacement, horsepower, weight, acceleration, and model year. 
+With the exception of mpg and cylinders, which are categorical, the rest of the features assume values from a continuum and therefore must be discretized prior to classification. 
+We implement and test two discretization strategies and present accuracy results for each.
 
 \subsection{Discretization of Continuous Values}
 
 \subsection{Accuracy Evaluation}
+Recall on training set for discretization strategy 1
+Recall on test set for discretization strategy 1
+Recall on training set for discretization strategy 2
+Recall on test set for discretization strategy 2
 
 \section{Results II: Wisconsin Breast Cancer Data}
+The Wisconsin Breast Cancer dataset is considerably larger than the Auto-MPG dataset, consisting of 419 training instances and 140 test instances, each of which has nine features. 
+The features are: clump thickness, uniform cell size, uniform cell shape, marginal adhesion, single epithelial cell size, bare nuclei, bland chromatin, normal nucleoli, and mitoses--each of which assumes integer values from 1 to 10. 
 
 \subsection{Accuracy Evaluation}
+Accuracy on training set
+Accuracy on test set
+Size of decision tree in terms of depth and total number of nodes
 
 \subsection{Effect of Pruning}
+Pruning a decision tree classifier can be helpful when the model has suffered from overfitting--i.e., it has learned not only the underlying function that maps vectors of features to classes, but also the inherent noise in the training set. 
+We propose pruning the decision tree in the following way. 
+For each non-root and non-leaf node, replace the subtree rooted at that node by a leaf node labeled with the majority class in the subset of the training data associated with that node. 
+Hence, for each such interior node, we generate a new decision tree classifier.
+By testing each of those new decision trees against a \emph{validation set} set aside fromboth the training set and testing set, we can evaluate the fitness of each of the pruned trees. 
+We would then take the pruned tree that performed best against the validation set and test it against the test set. 
 
 \section{Extensions}
 
