@@ -10,14 +10,17 @@ class DecisionTree(object):
         self.children      = {}
         self.splitting_feature = None
         self.klass         = None
-        #self.nodes         = [DecisionTreeNode(range(len(training_data)), None, i)]
     
     
     def build_tree_id3(self):
         for f in self.features:
             possible_values = self.get_possible_values(f)
-            if len(possible_values) > 10:
-                self.bin_values_median(f)
+            if len(possible_values) > 4:
+                self.bin_values_quartile(f)
+        
+        #print self.training_data[0]
+        #exit()
+
         self.build_tree_id3_helper()
 
     """
@@ -54,9 +57,16 @@ class DecisionTree(object):
 
             ### Make a child for each value the feature can take
             values = self.get_possible_values(max_gain_feature)
+            
+            #print max_gain_feature
+            #print values
+                
             for v in values:
                 ### Get subset of training data for which this feature has value v
                 subset = self.get_fixed_value_subset(max_gain_feature, v)
+
+                #print subset
+                #exit()
                 
                 #print "Subset for: " + str(max_gain_feature) + " = " + str(v)
                 #print subset
@@ -87,7 +97,13 @@ class DecisionTree(object):
             splitting_value = test_instance[dt.splitting_feature]
             #print self.splitting_feature
             #print splitting_value
-            dt = dt.children[splitting_value]
+            try:
+                dt = dt.children[splitting_value]
+            except KeyError:
+                print dt.splitting_feature
+                print splitting_value
+                print dt.children
+                exit()
             #print dt.children
             #exit()
         ### Return class at leaf
