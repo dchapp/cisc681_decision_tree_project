@@ -27,10 +27,12 @@ of Delaware - Newark, DE 19716 \\ Email: \{dchapp\}, \{mwyatt\}@udel.edu}}
 
 \section{Introduction}
 Decision trees classifiers are a supervised machine learning technique that can achieve high accuracy, even when learning boundaries between classes that have complex geometry. 
-In addition to high accuracy, decision trees can also provide fast--i.e., $O(\text{log}(n))$ query times, provided that the tree is sufficiently balanced. 
+In addition to high accuracy, decision trees can also provide fast--i.e., $O(\text{log}(n))$--query times, provided that the tree is sufficiently balanced. 
+
 In this work we implement the ID3 algorithm for inducing decision trees from training data, using information gain of data features as our splitting heuristic. 
 We test our implementation for correctness against two datasets from the UCI machine learning repository: the Auto-MPG dataset and the Wisconsin Breast Cancer dataset.
 Constructing the decision tree classifiers for both of these datasets required not only correct implementation of the base algorithm, but also implementation of techniques for discretizing or ``binning" continuous-valued features.
+
 In addition to correctness, we provide a comparative study of performance. 
 We implement the decision tree classifier in two ways and compare those implementations gainst each other, and against the reference implementation in scikit-learn. 
 
@@ -44,7 +46,8 @@ The goal of the ID3 algorithm is to construct a decision tree classifier.
 To that end, the algorithm considers subsets of the training data--initially the entire set--and selects a feature on which to partition the subset. 
 Selection of a feature is equivalent to creation of a node in the tree with descendent edges for each value the feature can assume.
 The algorithm then recurses on each branch; considering the subset of the training data that matches the value on the branch and excluding the previous feature from consideration.
-Below, we provide pseudocode that explicitly describes the ID3 algorithm for building a decision tree:
+
+Below in Algorithm~\ref{alg-id3}, we provide pseudocode that explicitly describes the ID3 algorithm for building a decision tree:
 
 \begin{algorithm}
     \caption{ID3}
@@ -52,24 +55,27 @@ Below, we provide pseudocode that explicitly describes the ID3 algorithm for bui
     \begin{algorithmic}[1]
         \Function{ID3}{training\_data}
             \If{all training data has same class}
-                \State return a leaf node labeled with that class
+            \State - return a leaf node labeled with that \\ \hspace{45pt}class
             \ElsIf{there are no remaining features}
-                \State return a leaf node labeled with the majority class
+            \State - return a leaf node labeled with the \\ \hspace{45pt}majority class
             \Else
-                \State Determine the feature $f$ with maximum information gain
-                \State Generate a node labeled with that feature
-                \State Add an outgoing branch from that node for each value that feature can take
+            \State - Determine the feature $f$ with \\ \hspace{45pt}maximum information gain
+            \State - Generate a node labeled with that \\ \hspace{45pt}feature
+            \State - Add an outgoing branch from that node \\ \hspace{45pt}for each value that feature can take
                 \For{each branch}
-                    \State Select subset of training data matching feature value of branch
-                    \State Remove $f$ from features under consideration
-                    \State Recurse on that subset   
+                \State - Select subset of training data \\ \hspace{62pt}matching feature value of branch
+                \State - Remove $f$ from features under \\ \hspace{62pt}consideration
+                    \State - Recurse on that subset   
                 \EndFor
             \EndIf
         \EndFunction
     \end{algorithmic}
 \end{algorithm}
 
-\subsection{Design and Use}
+\subsection{Design}
+
+\subsection{Use}
+We have attempted to make building the decision tree as easy as possible 
 
 \section{Results I: Auto-MPG Data}
 The Auto-MPG dataset consists of 42 training instances, each of which has seven features: mpg, cylinders, displacement, horsepower, weight, acceleration, and model year. 
