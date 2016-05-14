@@ -73,9 +73,15 @@ Below in Algorithm~\ref{alg-id3}, we provide pseudocode that explicitly describe
 \end{algorithm}
 
 \subsection{Design}
+We explored two different implementations of the decision tree classifier. 
+One approach is based on constructing a group of nested dictionaries to represent the tree. 
+The other approach is based on a recursive approach where the outgoing edges from any decision tree object explictly lead to other decision tree objects. 
 
 \subsection{Use}
-We have attempted to make building the decision tree as easy as possible 
+We have attempted to make building the decision tree as easy as possible.
+For both implementations, the user only needs to provide the paths of the training set and the testing set as command-line arguments to the main Python script.
+Optionally, the user also can specify a particular kind of discretization strategy for continuous-valued features or whether to do pruning or k-fold cross-validation. 
+In any case, these features are toggled on or off via optional command-line arguments to the main Python script. 
 
 \section{Results I: Auto-MPG Data}
 The Auto-MPG dataset consists of 42 training instances, each of which has seven features: mpg, cylinders, displacement, horsepower, weight, acceleration, and model year. 
