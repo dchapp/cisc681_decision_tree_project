@@ -119,17 +119,20 @@ Recall on test set for discretization strategy 2
 \section{Results II: Wisconsin Breast Cancer Data}
 The Wisconsin Breast Cancer dataset is considerably larger than the Auto-MPG dataset, consisting of 419 training instances and 140 test instances, each of which has nine features. 
 The features are: clump thickness, uniform cell size, uniform cell shape, marginal adhesion, single epithelial cell size, bare nuclei, bland chromatin, normal nucleoli, and mitoses--each of which assumes integer values from 1 to 10. 
-Since the features are integer-valued, despite the relatively large branching factor of 10 we treat the features as categorical/discrete as opposed to continuous and as such do not employ a discretization policy in this case. 
+Despite being essential discrete, the fact that some of these features refer to sizes and thickness indicates that their values should be discretized. Hence we employ the static and dynamic discretization policies against this dataset as well.
 
 \subsection{Accuracy Evaluation}
-Accuracy on training set
+First we build the decision tree from the training data using the static discretization policy. 
+Using the training data itself as the test data, we observe 86\% accuracy.
+When using the test data instead, we observe 55\% accuracy.
+However, when the tree is built using the dynamic discretization policy, the results are significantly improved.
+Against the training data, we observe 99\% accuracy, and against the test data, we observe 93\% accuracy
 
-Accuracy on test set
-
-Size of decision tree in terms of depth and total number of nodes
 
 \subsection{Effect of Pruning}
 Pruning a decision tree classifier can be helpful when the model has suffered from overfitting--i.e., it has learned not only the underlying function that maps vectors of features to classes, but also the inherent noise in the training set. 
+Due to the fact that the decision tree performed better on the training set than the testing set--i.e., 99\% accuracy vs. 93\% accuracy--we believe that the decision tree is at least somewhat overfit to the training data and would likely benefit from pruning. 
+
 We propose pruning the decision tree in the following way. 
 For each non-root and non-leaf node, replace the subtree rooted at that node by a leaf node labeled with the majority class in the subset of the training data associated with that node. 
 Hence, for each such interior node, we generate a new decision tree classifier.
