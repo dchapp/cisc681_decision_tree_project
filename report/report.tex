@@ -33,13 +33,12 @@ In this work we implement the ID3 algorithm for inducing decision trees from tra
 We test our implementation for correctness against two datasets from the UCI machine learning repository: the Auto-MPG dataset and the Wisconsin Breast Cancer dataset.
 Constructing the decision tree classifiers for both of these datasets required not only correct implementation of the base algorithm, but also implementation of techniques for discretizing or ``binning" continuous-valued features.
 
-In addition to correctness, we provide a comparative study of performance. 
-We implement the decision tree classifier in two ways and compare those implementations gainst each other, and against the reference implementation in scikit-learn. 
+Due to their utility and performance, optimized and well-tested implementations of machine learning algorithms such as decision trees can be found in the popular scikit-learn Python module.
+In the interest of judging our implementation against a reference implementation, we perform a correctness and performance comparison of our decision tree against the scikit-learn implementation.
 
 \section{Implementation}
 We implemented a system in Python to ingest data in \texttt{.csv} form and construct a decision tree from that data using the ID3 algorithm.
-Additionally, modules for discretization of non-categorical features, pruning, k-fold cross validation, and visualization of the decision tree were implemented.
-Though we always use the ID3 algorithm, we experimented with two distinct ways of representing the decision tree--in one case an object-oriented approach with explicit node objects, and in the other as a set of nested dictionaries--in order to compare their relative performance.  
+Additionally, modules for discretization of non-categorical features, k-fold cross validation, and visualization of the decision tree were implemented.
 
 \subsection{The ID3 Algorithm}
 The goal of the ID3 algorithm is to construct a decision tree classifier. 
@@ -53,7 +52,7 @@ Below in Algorithm~\ref{alg-id3}, we provide pseudocode that explicitly describe
     \caption{ID3}
     \label{alg-id3}
     \begin{algorithmic}[1]
-        \Function{ID3}{training\_data}
+        \Function{ID3}{training data}
             \If{all training data has same class}
             \State - return a leaf node labeled with that \\ \hspace{45pt}class
             \ElsIf{there are no remaining features}
@@ -72,15 +71,19 @@ Below in Algorithm~\ref{alg-id3}, we provide pseudocode that explicitly describe
     \end{algorithmic}
 \end{algorithm}
 
+Once the tree is constructed, querying it to predict the class of a test data instance is done by traversing the tree as in binary search; choosing branches based on the values of the instance's features. 
+Once a leaf node is reached, the test data instance is classified. 
+
 \subsection{Design}
-We explored two different implementations of the decision tree classifier. 
-One approach is based on constructing a group of nested dictionaries to represent the tree. 
-The other approach is based on a recursive approach where the outgoing edges from any decision tree object explictly lead to other decision tree objects. 
+Our implementation fundamentally represents the decision tree as a set of nested Python dictionaries.
+This design decision was motivated by the expected use case for a decision tree classifier--i.e., that the model will be constructed once and then queried many times.
+To that end, using data structures with excellent query performance such as dictionaries is justified. 
+Furthermore, the nested dictionary structure lends itself naturally to serialization--e.g., via the cPickle Python module--in the event that we want to use the model elsewhere without rebuilding it.  
 
 \subsection{Use}
 We have attempted to make building the decision tree as easy as possible.
-For both implementations, the user only needs to provide the paths of the training set and the testing set as command-line arguments to the main Python script.
-Optionally, the user also can specify a particular kind of discretization strategy for continuous-valued features or whether to do pruning or k-fold cross-validation. 
+For our implementation, the user only needs to provide the paths of the training set and the testing set as command-line arguments to the main Python script.
+Optionally, the user also can specify a particular kind of discretization strategy for continuous-valued features or whether to do k-fold cross-validation. 
 In any case, these features are toggled on or off via optional command-line arguments to the main Python script. 
 
 \section{Results I: Auto-MPG Data}
@@ -89,20 +92,40 @@ With the exception of mpg and cylinders, which are categorical, the rest of the 
 We implement and test two discretization strategies and present accuracy results for each.
 
 \subsection{Discretization of Continuous Values}
+The kind of features that decision trees operate on naturally are categorical or discrete--e.g., color, shape, hasBeak--but often the data on hand, as in the case of the Auto-MPG dataset, has features that assume values from a continuum--e.g., weight or height.
+For this kind of data, building a decision tree is still possible, but the data requires preprocessing via some discretization policy. 
+The most obvious way to discretize is by converting the continuous feature to a simple binary feature--i.e., ``weight" $\rightarrow$ ``weight $\leq$ $t$" for some threshold $t$. 
+In the interest of greater accuracy, we explore the use of two more complex discretization policies, referred to hereafter as static and dynamic.
+
+\subsubsection{Static Discretization}
+In the static policy, the discretization is done on the entire training set prior to inducing the decision tree. 
+A fixed number of bins of equal width is specified and for each continuous-valued feature, the feature value is replaced by a label indicating which bin--i.e., interval--the feature value lies in. 
+In this way, all continuous-valued features are converted to categorical/discrete features and the tree can be constucted as usual. 
+
+\subsubsection{Dynamic Discretization}
+One weakeness of the static policy is that since the binning is based on the full range of values that the features take on in the whole dataset, at nodes lower down in the tree the splits may not be particularly well-suited for the subsets of data associated to those nodes. 
+The dynamic discretization policy remedies this by computing a binning at each node as needed, using only the data associated to that node. 
+The resulting binning is in this sense better-fit to the relevant data and can yield a more accurate decision tree. 
 
 \subsection{Accuracy Evaluation}
 Recall on training set for discretization strategy 1
+
 Recall on test set for discretization strategy 1
+
 Recall on training set for discretization strategy 2
+
 Recall on test set for discretization strategy 2
 
 \section{Results II: Wisconsin Breast Cancer Data}
 The Wisconsin Breast Cancer dataset is considerably larger than the Auto-MPG dataset, consisting of 419 training instances and 140 test instances, each of which has nine features. 
 The features are: clump thickness, uniform cell size, uniform cell shape, marginal adhesion, single epithelial cell size, bare nuclei, bland chromatin, normal nucleoli, and mitoses--each of which assumes integer values from 1 to 10. 
+Since the features are integer-valued, despite the relatively large branching factor of 10 we treat the features as categorical/discrete as opposed to continuous and as such do not employ a discretization policy in this case. 
 
 \subsection{Accuracy Evaluation}
 Accuracy on training set
+
 Accuracy on test set
+
 Size of decision tree in terms of depth and total number of nodes
 
 \subsection{Effect of Pruning}
@@ -110,12 +133,10 @@ Pruning a decision tree classifier can be helpful when the model has suffered fr
 We propose pruning the decision tree in the following way. 
 For each non-root and non-leaf node, replace the subtree rooted at that node by a leaf node labeled with the majority class in the subset of the training data associated with that node. 
 Hence, for each such interior node, we generate a new decision tree classifier.
-By testing each of those new decision trees against a \emph{validation set} set aside fromboth the training set and testing set, we can evaluate the fitness of each of the pruned trees. 
+By testing each of those new decision trees against a \emph{validation set} set aside from both the training set and testing set, we can evaluate the fitness of each of the pruned trees. 
 We would then take the pruned tree that performed best against the validation set and test it against the test set. 
 
 \section{Extensions}
-
-\subsection{Performance Comparison}
 
 \subsection{K-fold Cross Validation}
 
