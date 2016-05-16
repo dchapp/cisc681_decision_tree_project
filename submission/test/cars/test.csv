@@ -1,0 +1,5 @@
+mpg,cylinders,displacement,horsepower,weight,acceleration,modelyear,maker
+OK,6,232,90,3085,17.6,76,America
+OK,4,116,75,2158,15.5,73,Asia
+Bad,8,400,175,4385,12,72,America
+Good,4,112,88,2395,18,82,America
