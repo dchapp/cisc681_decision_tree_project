@@ -168,10 +168,15 @@ However, in this case the disparity is exacerbated by how small both the trainin
 We expect that both recall and accuracy would improve given a larger dataset. However, it is difficult to say exactly what accuracy would be obtained before excessive overfitting occurs. 
 To investigate this, we would consider taking a much larger dataset--e.g., one with more than 10,000 training instances--training on an increasing fraction of it, and monitoring the resulting accuracy. 
 
+\begin{figure*}
+  \includegraphics[width=\textwidth]{DT.png}
+  \caption{The decision tree for the MPG dataset, using the static discretization policy}
+\end{figure*}
+
 \section{Results II: Wisconsin Breast Cancer Data}
 The Wisconsin Breast Cancer dataset is considerably larger than the Auto-MPG dataset, consisting of 419 training instances and 140 test instances, each of which has nine features. 
 The features are: clump thickness, uniform cell size, uniform cell shape, marginal adhesion, single epithelial cell size, bare nuclei, bland chromatin, normal nucleoli, and mitoses--each of which assumes integer values from 1 to 10. 
-Despite being essential discrete, the fact that some of these features refer to sizes and thickness indicates that their values should be discretized. Hence we employ the static and dynamic discretization policies against this dataset as well.
+Despite being essential discrete, the fact that some of these features refer to sizes and thickness indicates that their values should be discretized. Hence we employ the static and dynamic discretization policies against this dataset as well.  With the static discretization policy, we obtained a tree of depth 6 with 85 nodes.  With the dynamic discretization policy, we obtained a tree of depth 5 with 79 nodes.
 
 \subsection{Accuracy Evaluation}
 First we build the decision tree from the training data using the static discretization policy. 
@@ -193,8 +198,32 @@ We would then take the pruned tree that performed best against the validation se
 \section{Extensions}
 
 \subsection{K-fold Cross Validation}
+K-fold cross validation is a technique for assessing how a model will
+generalize to an independent dataset.  This technique is performed by splitting
+the dataset into k partitions of roughly equal size.  A model is then built and
+used to predict classes k times.  At each iteration of building and predicting,
+k-1 of the partitions are used for training and the remaining partition is used
+for testing.  Each of the partitions is used only once for testing.  The result
+is k scores of accuracy, which can be averaged to get a better idea of model
+performance with an independent dataset.
+
+Performing 10-fold cross validation on the Wisconsin Breast Cancer training
+set, we obtain the following recalls: 0.95, 0.67, 0.77, 1.0, 1.0, 0.91, 0.77,
+0.86, 1.0, 0.87.  The average recall is 88\%.  This is using the same settings
+as the test which gave us 99\% recall before.  However, this lower recall rate
+is more accurate for how our model would perform with an independent dataset.
 
 \subsection{Comparison with scikit-learn}
+We can compare our decision tree model to the implementation in scikit-learn,
+an often-used machine learning library.  Using the scikit-learn decision tree
+on the Wisconsin Breast Cancer data, we can build a model using similar
+parameters as we used for our model.  Additionally, we perform a 10-fold cross
+validation to obtain a more realistic performance of the scikit-learn
+implementation.  We obtained an average recall of 93\%.  This increase in
+recall performance can be attributed to the sci-kit learn model having complex
+computation to determine the best split for continuous valued features.  Our
+static and dynamic methods are relatively simple in comparison.
+
 
 \section{Conclusions}
 We implemented a decision tree classifier that obtained highly accurate results against two data sets with diverse features.
