@@ -22,6 +22,7 @@ parser.add_argument('-k', '--kfold', help='perform crossvalidation?',
 parser.add_argument('-l', '--leaf', help='minleaf', default=2)
 parser.add_argument('-d', '--depth', help='maxdepth', default=6)
 parser.add_argument('-p', '--positive', help='positive class label', required=True)
+parser.add_argument('--print', help='print the tree', action='store_true')
 args = parser.parse_args()
 
 if args.cont == 'false':
@@ -60,4 +61,5 @@ else:
     depth, node_count = treeInfo(tree)
     print 'Max Depth: %d, Nodes: %d' % (depth, node_count)
 
-    printTree(tree)
+    if args.print:
+        printTree(tree)
