@@ -8,13 +8,15 @@ with open("wdbc.names", "rb") as headerfile:
 training_csv.write("class, ")
 for i in xrange(len(headers)):
     training_csv.write(headers[i])
-    training_csv.write(",")
+    if i < len(headers):
+        training_csv.write(",")
 training_csv.write("\n")
 
 testing_csv.write("class, ")
 for i in xrange(len(headers)):
     testing_csv.write(headers[i])
-    testing_csv.write(",")
+    if i < len(headers):
+        testing_csv.write(",")
 testing_csv.write("\n")
 
 with open("wdbc-train.data", "rb") as infile:

@@ -1,4 +1,4 @@
-class, clump_thickness, Uniform_cell_size, Uniform_cell_shape, Marginal_adhesion, Single_epithelial_cell_size, Bare_nuclei, Bland_Chromatin, Normal_Nucleoli, Mitoses,
+class, clump_thickness, Uniform_cell_size, Uniform_cell_shape, Marginal_adhesion, Single_epithelial_cell_size, Bare_nuclei, Bland_Chromatin, Normal_Nucleoli, Mitoses
 2,2,3,1,1,5,1,1,1,1
 2,3,2,2,3,2,3,3,1,1
 4,10,10,10,7,10,10,8,2,1
