@@ -107,7 +107,7 @@ One weakeness of the static policy is that since the binning is based on the ful
 The dynamic discretization policy remedies this by computing a binning at each node as needed, using only the data associated to that node. 
 The resulting binning is in this sense better-fit to the relevant data and can yield a more accurate decision tree. 
 
-The resulting tree is shown in Figure~\ref{fig-mpg-dt}. Observe that the maximum depth of any branch in the tree is 5 and the total number of nodes is 27--indicating that the depth $\sim$ $\text{log}_{2}($number of nodes). This balance property of the tree is expected, if not guaranteed, by the greeding splitting heuristic employed by ID3. 
+The resulting tree is shown in Figure~\ref{fig-mpg-dt}. Observe that the maximum depth of any branch in the tree is 5 and the total number of nodes is 27--indicating that the depth $\sim$ $\text{log}_{2}($number of nodes). This balance property of the tree is expected, if not guaranteed, by the greedy splitting heuristic employed by ID3. 
 
 \subsection{Accuracy Evaluation}
 To evaluate the correctness of our decision tree, we report the recall for four cases: testing against the full training data with the static policy, testing against the full training data with the dynamic policy, testing against a separate test set with the static policy, and testing against separate test set with the dynamic policy. 
