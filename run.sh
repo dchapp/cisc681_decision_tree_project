@@ -1,7 +1,7 @@
 WBCtrain="./test/WBC_data/wdbc-train-csv.data"
 WBCtest="./test/WBC_data/wdbc-test-csv.data"
-MPGtrain=""
-MPGtest=""
+MPGtrain="./test/cars/train.csv"
+MPGtest="./test/cars/test.csv"
 
 Driver="./src_m/driver.py"
 
