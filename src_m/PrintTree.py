@@ -1,5 +1,8 @@
+import sys
+
 try:
     import pydot
+    pdot = True
 except:
     pdot = False
 
