@@ -1,4 +1,7 @@
-import pydot
+try:
+    import pydot
+except:
+    pdot = False
 
 def getLabel(key):
     if isinstance(key, tuple):
@@ -35,9 +38,34 @@ def exploreNode(node, graph, i):
     return j
 
 def printTree(tree):
+    global pdot
+    if pdot == False:
+        print 'Please install pydot to print trees'
+        return 0
     graph = pydot.Dot(graph_type='graph')
     node = pydot.Node('0', label=tree['feature'][1])
     graph.add_node(node)
     j = exploreNode(tree, graph, 0)
     graph.write_png('DT.png')
 
+def traverseTree(node, depth, node_count):
+    node_count += 1
+
+    if not node['children']:
+        return depth, node_count
+
+    depth += 1
+    child_depth = []
+    for child in node['children'].values():
+        new_depth, node_count = traverseTree(child, depth, node_count)
+        child_depth.append(new_depth)
+
+    depth = max(child_depth)
+
+    return depth, node_count
+
+def treeInfo(tree):
+    depth = 0
+    node_count = 0
+    depth, node_count = traverseTree(tree, depth, node_count)
+    return depth, node_count

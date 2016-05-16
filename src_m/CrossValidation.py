@@ -1,6 +1,7 @@
 import numpy as np
+from Evaluation import recall
 
-def kFold(data, model, k):
+def kFold(model, data, k, positive):
     if len(data) < k:
         print 'Error: k must be smaller than the number of data points'
 
@@ -29,7 +30,7 @@ def kFold(data, model, k):
         data_predict = model.predict(data_test)
 
         # Append accuracy of current prediction
-        accuracy.append(float(np.sum(data_true==data_predict))/len(data_true))
+        accuracy.append(recall(data_true, data_predict, positive))
 
     # Return list of accuracies
     return accuracy
